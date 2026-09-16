@@ -85,6 +85,13 @@ bool GameEventsProtocol::notifyEvent(Event* event)
     {
         if (!sw)
             throw std::invalid_argument("No soccer world");
+        if (NetworkConfig::get()->isServer())
+        {
+            Log::warn("GameEventsProtocol",
+                "Ignoring client soccer-goal notification from %s.",
+                event->getPeer()->getAddress().toString().c_str());
+            break;
+        }
         sw->handlePlayerGoalFromServer(data);
         break;
     }
